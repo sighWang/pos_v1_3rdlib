@@ -113,7 +113,7 @@ function getTotalsAndSave(subtotalList){
 }
 
 function getFreeList(subtotalList){
-  var outputFreeList = '挥泪赠送商品：\n';
+  var outputFreeList = '----------------------\n挥泪赠送商品：\n';
   _.forEach(subtotalList, function(subtotal){
        if(subtotal.promotion.proType !== 'no'){
        outputFreeList += '名称：' + subtotal.itemInfo.name + '，数量：' +
@@ -128,8 +128,8 @@ function getMyShoppingList(subtotalList){
   _.forEach(subtotalList, function(subtotal) {
       myShoppingList += '名称：' + subtotal.itemInfo.name + '，数量：' +
       subtotal.itemInfo.num + subtotal.itemInfo.unit +
-       '，单价：' + subtotal.itemInfo.price + '(元)，' +
-       '小计：'  + getSubtotal(subtotal) + '(元)\n';
+       '，单价：' + (subtotal.itemInfo.price).toFixed(2) + '(元)，' +
+       '小计：'  + getSubtotal(subtotal).toFixed(2) + '(元)\n';
   })
   return myShoppingList;
 }
