@@ -1,24 +1,24 @@
 function printInventory(inputs){
 
-     var barcAndNumList = countGoods(inputs);
-     var subTotalList = listGoods(barcAndNumList);
-     outputList(subTotalList);
+    var barcAndNumList = countGoods(inputs);
+    var subTotalList = listGoods(barcAndNumList);
+    outputList(subTotalList);
 }
 
 function countGoods(inputs){
-     var barcAndNumList = [];
-     var barcAndNum;
-     for (var i = 0; i < inputs.length; ){
+    var barcAndNumList = [];
+    var barcAndNum;
+    for (var i = 0; i < inputs.length; ){
 
-       var num = 0;
-       var idx = inputs.indexOf(inputs[i]);
-       while(idx != -1){
+    var num = 0;
+    var idx = inputs.indexOf(inputs[i]);
+    while(idx != -1){
          num++;
          idx = inputs.indexOf( inputs[i] , idx + 1 );
        }
-       var goods = inputs[i].split('-');
+    var goods = inputs[i].split('-');
 
-        barcAndNum = {
+    barcAndNum = {
        'barcode': goods[0],
        'num': goods[1] * num || num
      };
@@ -28,10 +28,10 @@ function countGoods(inputs){
        }
        inputs = inputs.filter(isElement);
 
-       barcAndNumList.push(barcAndNum);
+    barcAndNumList.push(barcAndNum);
      }
-     return barcAndNumList;
-  }
+    return barcAndNumList;
+}
 
 function listGoods(barcAndNumList){
     var subTotalList = [];
@@ -48,29 +48,29 @@ function listGoods(barcAndNumList){
 }
 
 function getItemInfo(barcAndNum){
-  var allItems = loadAllItems();
-  var itemInfo;
-  var item = _.find(loadAllItems(), {'barcode': barcAndNum.barcode});
+    var allItems = loadAllItems();
+    var itemInfo;
+    var item = _.find(loadAllItems(), {'barcode': barcAndNum.barcode});
 
-  itemInfo = {
-    'name': item.name,
-    'num':barcAndNum.num,
-    'barcode': item.barcode,
-    'unit': item.unit,
-    'price':item.price
+    itemInfo = {
+      'name': item.name,
+      'num':barcAndNum.num,
+      'barcode': item.barcode,
+      'unit': item.unit,
+      'price':item.price
       };
-  return itemInfo;
+      return itemInfo;
 }
 
 function getPromotion(barcAndNum){
-  var promotion;
-  var promotions = loadPromotions();
-  var customPromotion = {
+    var promotion;
+    var promotions = loadPromotions();
+    var customPromotion = {
         'proType': 'no',
         'proNum': 0
         };
-   _.each(loadPromotions(), function(promotion) {
-     _.each(promotion.barcodes,function(barcode){
+    _.each(loadPromotions(), function(promotion) {
+      _.each(promotion.barcodes,function(barcode){
         if(barcode === barcAndNum.barcode){
             customPromotion = {
                 'proType': promotion.type,
@@ -99,40 +99,40 @@ function getShopingList( subtotalList ){
 }
 
 function getTotalsAndSave(subtotalList){
-  var totals = 0;
-  var saveUp = 0;
-  _.forEach(subtotalList, function(subtotal) {
+    var totals = 0;
+    var saveUp = 0;
+    _.forEach(subtotalList, function(subtotal) {
         totals += subtotal.itemInfo.price * (subtotal.itemInfo.num - subtotal.promotion.proNum);
         saveUp += subtotal.itemInfo.price * subtotal.promotion.proNum || 0;
-  })
-  var totalsAndSave = '----------------------\n';
-  totalsAndSave += '总计：' + totals.toFixed(2) + '(元)\n' +
-  '节省：' + saveUp.toFixed(2) + '(元)\n' +
-  '**********************';
-  return totalsAndSave;
+      })
+      var totalsAndSave = '----------------------\n';
+      totalsAndSave += '总计：' + totals.toFixed(2) + '(元)\n' +
+      '节省：' + saveUp.toFixed(2) + '(元)\n' +
+      '**********************';
+      return totalsAndSave;
 }
 
 function getFreeList(subtotalList){
-  var outputFreeList = '----------------------\n挥泪赠送商品：\n';
-  _.forEach(subtotalList, function(subtotal){
+    var outputFreeList = '----------------------\n挥泪赠送商品：\n';
+    _.forEach(subtotalList, function(subtotal){
        if(subtotal.promotion.proType !== 'no'){
        outputFreeList += '名称：' + subtotal.itemInfo.name + '，数量：' +
        subtotal.promotion.proNum + subtotal.itemInfo.unit + '\n';
       }
-  })
-  return outputFreeList;
+    })
+    return outputFreeList;
 }
 
 function getMyShoppingList(subtotalList){
-  var myShoppingList = '';
-  _.forEach(subtotalList, function(subtotal) {
-      myShoppingList += '名称：' + subtotal.itemInfo.name + '，数量：' +
-      subtotal.itemInfo.num + subtotal.itemInfo.unit +
-       '，单价：' + (subtotal.itemInfo.price).toFixed(2) + '(元)，' +
-       '小计：'  + getSubtotal(subtotal).toFixed(2) + '(元)\n';
-  })
-  return myShoppingList;
+    var myShoppingList = '';
+    _.forEach(subtotalList, function(subtotal) {
+        myShoppingList += '名称：' + subtotal.itemInfo.name + '，数量：' +
+        subtotal.itemInfo.num + subtotal.itemInfo.unit +
+        '，单价：' + (subtotal.itemInfo.price).toFixed(2) + '(元)，' +
+        '小计：'  + getSubtotal(subtotal).toFixed(2) + '(元)\n';
+      })
+      return myShoppingList;
 }
 function getSubtotal(stListItem){
-  return (stListItem.itemInfo.num - stListItem.promotion.proNum ) * stListItem.itemInfo.price;
+    return (stListItem.itemInfo.num - stListItem.promotion.proNum ) * stListItem.itemInfo.price;
 }
